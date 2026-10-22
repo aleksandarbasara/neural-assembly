@@ -9,9 +9,49 @@ import { getGlobalData } from '../utils/global-data';
 import SEO from '../components/SEO';
 
 export default function Index({ posts, globalData }) {
+  const homeUrl = `${globalData.siteUrl}/`;
+  const organizationId = `${globalData.siteUrl}/#organization`;
+  const blogId = `${globalData.siteUrl}/#blog`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': organizationId,
+        name: globalData.organizationName,
+        url: globalData.siteUrl,
+        logo: {
+          '@type': 'ImageObject',
+          url: globalData.organizationLogoUrl,
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${globalData.siteUrl}/#website`,
+        url: homeUrl,
+        name: globalData.blogTitle,
+        publisher: { '@id': organizationId },
+        mainEntity: { '@id': blogId },
+      },
+      {
+        '@type': 'Blog',
+        '@id': blogId,
+        url: homeUrl,
+        name: globalData.blogTitle,
+        publisher: { '@id': organizationId },
+        isPartOf: { '@id': `${globalData.siteUrl}/#website` },
+      },
+    ],
+  };
+
   return (
     <Layout>
-      <SEO title={globalData.name} description={globalData.blogTitle} />
+      <SEO
+        title={globalData.name}
+        description={globalData.blogTitle}
+        canonicalUrl={homeUrl}
+        structuredData={structuredData}
+      />
       <Header name={globalData.name} />
       <main className="w-full">
         <h1 className="mb-12 text-3xl text-center lg:text-5xl">

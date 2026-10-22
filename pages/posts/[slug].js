@@ -38,11 +38,64 @@ export default function PostPage({
   globalData,
   slug,
 }) {
+  const postUrl = `${globalData.siteUrl}/posts/${slug}`;
+  const organizationId = `${globalData.siteUrl}/#organization`;
+  const authorId = `${postUrl}#author`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': `${postUrl}#article`,
+        mainEntityOfPage: postUrl,
+        url: postUrl,
+        headline: frontMatter.title,
+        ...(frontMatter.description
+          ? { description: frontMatter.description }
+          : {}),
+        ...(frontMatter.date
+          ? { datePublished: new Date(frontMatter.date).toISOString() }
+          : {}),
+        ...(frontMatter.author ? { author: { '@id': authorId } } : {}),
+        isPartOf: { '@id': `${globalData.siteUrl}/#blog` },
+        publisher: { '@id': organizationId },
+      },
+      ...(frontMatter.author
+        ? [
+            {
+              '@type': 'Person',
+              '@id': authorId,
+              name: frontMatter.author,
+            },
+          ]
+        : []),
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: `${globalData.siteUrl}/`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: frontMatter.title,
+            item: postUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <Layout>
       <SEO
         title={`${frontMatter.title} - ${globalData.name}`}
         description={frontMatter.description}
+        canonicalUrl={postUrl}
+        structuredData={structuredData}
       />
       <Header name={globalData.name} />
       <article className="px-6 md:px-0" data-sb-object-id={`posts/${slug}.mdx`}>

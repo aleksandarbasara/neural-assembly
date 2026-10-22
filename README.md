@@ -70,11 +70,16 @@ Here are the variables you can edit:
 | `BLOG_NAME` | the name of your blog, displayed below the avatar ||
 | `BLOG_TITLE` | the main header (`h1`) on the home page ||
 | `BLOG_FOOTER_TEXT`| the text in the footer ||
+| `NEXT_PUBLIC_SITE_URL` | the canonical website origin used by canonical links and structured data | `https://neural-assembly.com` |
+| `BLOG_ORGANIZATION_NAME` | publisher name in the Organization structured data | `Neural Assembly` |
+| `BLOG_ORGANIZATION_LOGO_URL` | publisher logo URL in the Organization structured data | `https://neural-assembly.com/neural_assembly_logo.svg` |
 | `BLOG_THEME` | the theme to pass to Tailwind | default |
 | `BLOG_FONT_HEADINGS` | the font-family for all HTML headings, from `h1` to `h6`| sans-serif (default), serif, monospace|
 | `BLOG_FONT_PARAGRAPHS` | the font-family for all other HTML elements | sans-serif (default), serif, monospace|
 
 All of the env variables can be configured through the [Wizard](https://nextjs-wizard.netlify.app/) or through setting the project's environment variables. You can do this in your Netlify dashaboard (Site settings/Build & deploy/Environment/Environment variables).
+
+The site emits Schema.org JSON-LD for `WebSite` and `Blog` on the homepage, and `BlogPosting`, `Person`, and `BreadcrumbList` on each post. The publisher is represented as the `Neural Assembly` Organization. Each post's `author` front matter is linked from `BlogPosting.author` to a name-only `Person` entity. Set the three schema-related environment variables above when deploying to a different domain or with different publisher details.
 
 https://user-images.githubusercontent.com/3611928/153997545-6dcdeef0-e570-49e7-93d6-ce0d393d16c9.mp4
 
@@ -90,6 +95,12 @@ If setting an environment variable isn't your cup of tea, the defaults can be ch
 All posts are stored in `/posts` directory. To make a new post, create a new file with the [`.mdx` extension](https://mdxjs.com/).
 
 Since the posts are written in `MDX` format you can pass props and components. That means you can use [React components](https://reactjs.org/docs/components-and-props.html) inside your posts to make them more interactive. Learn more about how to do so in the [MDX docs on content](https://mdxjs.com/docs/using-mdx/#components).
+
+Add an `author` field to each post's front matter to include its author in the post's structured data:
+
+```yaml
+author: Aleksandar Basara
+```
 
 https://user-images.githubusercontent.com/3611928/152727802-102ec296-41c8-446d-93ed-922d11187073.mp4
 
